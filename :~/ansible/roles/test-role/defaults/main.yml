@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: Blps API specification
+  version: 1.0.11
+
+paths:
+  /users/login:
+    post:
+      tags:
+        - users
+      description: log in
+      operationId: login
+      requestBody:
+        description: Log in to account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid username or password
+  /users/register:
+    post:
+      tags:
+        - users
+      description: create new account
+      operationId: register
+      requestBody:
+        description: Create new account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: User exists
+        '401':
+          description: Invalid group code
+        '402':
+          description: Group already has head
+  /users/{user_id}/groups/{group_id}:
+    post:
+      tags:
+        - users
+      description: enter group 
+      operationId: enterGroup
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: group_id
+          in: path
+          description: ID of group
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Enter particular group
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnterGroupRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid data
+    delete:
+      tags:
+        - users
+      description: exit group 
+      operationId: exitGroup
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: group_id
+          in: path
+          description: ID of group
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid data
+  /users/logout:
+    get:
+      tags:
+        - users
+      description: ''
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: vasya
+        password:
+          type: string
+          example: qwerty
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: vasya
+        password:
+          type: string
+          example: qwerty
+        group:
+          type: string
+          example: P33131
+        group_code:
+          type: string
+          example: asdf
+          description: not required
+        group_head:
+          type: boolean
+          description: not required
+    EnterGroupRequest:
+      type: object
+      properties:
+        group_code:
+          type: string
+          example: qwerty
